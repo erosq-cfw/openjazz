@@ -22,6 +22,7 @@
 #include "apple.h"
 #include "android.h"
 #include "dingoo.h"
+#include "erosq.h"
 #include "emscripten.h"
 #include "gameshell.h"
 #include "gp2x_wiz_canoo.h"

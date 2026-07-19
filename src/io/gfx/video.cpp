@@ -39,6 +39,10 @@
 #include <stdio.h>
 #include <string.h>
 
+#ifdef TARGET_EROSQ
+#include "platforms/erosq/erosq_video.h"
+#endif
+
 
 
 /**
@@ -295,6 +299,11 @@ bool Video::init (SetupOptions cfg) {
 
 	setTitle(nullptr);
 
+#ifdef TARGET_EROSQ
+	if (erosq_video_init() != 0)
+		LOG_WARN("erosq: DRM output init failed (is the UI still holding the panel?)");
+#endif
+
 	return true;
 
 }
@@ -335,6 +344,10 @@ void Video::commonDeinit () {
  *
  */
 void Video::deinit () {
+
+#ifdef TARGET_EROSQ
+	erosq_video_deinit();
+#endif
 
 	commonDeinit();
 
@@ -763,6 +776,13 @@ void Video::flip (int mspf, PaletteEffect* paletteEffects, bool effectsStopped) 
 		paletteEffects->apply(shownPalette, false, mspf, effectsStopped);
 		changePalette(shownPalette, 0, MAX_PALETTE_COLORS);
 	}
+
+#ifdef TARGET_EROSQ
+	// No SDL window on this device: blit the 8-bit canvas straight to the panel
+	// using the currently-shown palette (screen holds it post-effects).
+	erosq_present(canvas->pixels, screen->format->palette->colors, canvasW, canvasH);
+	return;
+#endif
 
 #if OJ_SDL3
 	// Show what has been drawn

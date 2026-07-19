@@ -31,6 +31,10 @@
 #include "util.h"
 #include "log.h"
 
+#ifdef TARGET_EROSQ
+#include "platforms/erosq/erosq_input.h"
+#endif
+
 #if !OJ_SDL3
 	// Define some stuff to be SDL3 compatible
 
@@ -277,6 +281,9 @@ void Controls::init() {
 #else
 	if (SDL_NumJoysticks() > 0) SDL_JoystickOpen(0);
 #endif
+#ifdef TARGET_EROSQ
+	erosq_input_init();
+#endif
 }
 
 void Controls::deinit() {
@@ -284,6 +291,9 @@ void Controls::deinit() {
 	if(SDL_HasJoystick()) SDL_CloseJoystick(0);
 #else
 	if (SDL_NumJoysticks() > 0) SDL_JoystickClose(0);
+#endif
+#ifdef TARGET_EROSQ
+	erosq_input_deinit();
 #endif
 }
 

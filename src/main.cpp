@@ -39,6 +39,9 @@
 
 #include "game/game.h"
 #include "io/controls.h"
+#ifdef TARGET_EROSQ
+#include "platforms/erosq/erosq_input.h"
+#endif
 #include "io/file.h"
 #include "io/gfx/font.h"
 #include "io/gfx/video.h"
@@ -530,6 +533,11 @@ int loop (LoopType type, PaletteEffect* paletteEffects, bool effectsStopped) {
 	// Show what has been drawn
 	video.flip(globalTicks - prevTicks, paletteEffects, effectsStopped);
 
+
+#ifdef TARGET_EROSQ
+	// Drain DAP buttons into the SDL event queue so the poll below sees them.
+	erosq_input_poll();
+#endif
 
 	// Process system events
 	while (SDL_PollEvent(&event)) {

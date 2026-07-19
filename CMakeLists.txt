@@ -238,6 +238,8 @@ if(SCALE)
 	add_subdirectory(ext/scale2x)
 endif()
 
+option(TARGET_EROSQ "Build for the EROS Q (Ingenic X1000) handheld: drm_out present + evdev input, no SDL video" OFF)
+
 option(ENABLE_JJ2 "Enable experimental Episode 2 support (not recommended)" OFF)
 if(ENABLE_JJ2)
 	target_sources(OpenJazz PRIVATE
@@ -396,6 +398,22 @@ elseif(APPLE)
 	target_sources(OpenJazz PRIVATE
 		src/platforms/apple.cpp
 		src/platforms/apple.h)
+elseif(TARGET_EROSQ)
+	enable_language(C)
+	target_sources(OpenJazz PRIVATE
+		src/platforms/xdg.cpp
+		src/platforms/xdg.h
+		src/platforms/erosq.h
+		src/platforms/erosq/erosq_video.cpp
+		src/platforms/erosq/erosq_video.h
+		src/platforms/erosq/erosq_input.cpp
+		src/platforms/erosq/erosq_input.h
+		src/platforms/erosq/drm_out.c
+		src/platforms/erosq/drm_out.h
+		src/platforms/erosq/erosq_blit.c
+		src/platforms/erosq/erosq_blit.h)
+	target_compile_definitions(OpenJazz PRIVATE TARGET_EROSQ)
+	target_link_libraries(OpenJazz PRIVATE -lm)
 elseif(UNIX)
 	target_sources(OpenJazz PRIVATE
 		src/platforms/xdg.cpp
