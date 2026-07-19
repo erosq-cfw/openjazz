@@ -652,6 +652,15 @@ int main(int argc, char *argv[]) {
 
 	// Initialise SDL
 
+#ifdef TARGET_EROSQ
+	// Launched bare from erosq-ui (no argv/env): the X1000 has only SDL's dummy
+	// video driver (we present via drm_out), and SDL won't auto-select it. Pin
+	// the drivers here so the binary is self-contained. Audio auto-picks alsa,
+	// but be explicit. setenv(...,0) = don't clobber an override from the shell.
+	setenv("SDL_VIDEODRIVER", "dummy", 0);
+	setenv("SDL_AUDIODRIVER", "alsa", 0);
+#endif
+
 	bool sdlOk = false;
 #if OJ_SDL3
 	sdlOk = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_JOYSTICK);
