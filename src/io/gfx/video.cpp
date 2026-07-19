@@ -36,6 +36,7 @@
 #include "util.h"
 #include "io/log.h"
 
+#include <stdio.h>
 #include <string.h>
 
 
@@ -722,6 +723,20 @@ void Video::update (SDL_Event *event) {
  * @param effectsStopped Whether the effects should be applied without advancing
  */
 void Video::flip (int mspf, PaletteEffect* paletteEffects, bool effectsStopped) {
+
+#ifdef SPIKE_BENCH
+	// ponytail: spike fps counter — reports sustained frame rate every ~2s.
+	{
+		static Uint32 t0 = 0; static int nf = 0;
+		Uint32 now = SDL_GetTicks();
+		if (t0 == 0) t0 = now;
+		if (++nf, now - t0 >= 2000) {
+			fprintf(stderr, "SPIKE_FPS %.1f\n", nf * 1000.0 / (now - t0));
+			fflush(stderr);
+			t0 = now; nf = 0;
+		}
+	}
+#endif
 
 	SDL_Color shownPalette[MAX_PALETTE_COLORS];
 

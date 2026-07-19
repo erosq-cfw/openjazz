@@ -226,6 +226,12 @@ int GameMenu::playNewGame (GameModeType mode, char* firstLevel) {
  */
 int GameMenu::newGameDifficulty (GameModeType mode, char* firstLevel) {
 
+#ifdef SPIKE_BENCH
+	// ponytail: spike hook — skip the interactive difficulty menu and drop
+	// straight into the level so a headless run measures real gameplay RSS/fps.
+	return playNewGame(mode, firstLevel);
+#endif
+
 	const char *options[4] = {"easy", "medium", "hard", "turbo"};
 	SDL_Rect src, dst;
 	int x, y;
