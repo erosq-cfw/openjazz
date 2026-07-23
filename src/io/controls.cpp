@@ -143,13 +143,17 @@
 	#define DEFAULT_BUTTON_ENTER  (0)
 #endif
 #ifndef DEFAULT_BUTTON_ESCAPE
-	#define DEFAULT_BUTTON_ESCAPE (5)
+	/* erosq: SDL joystick button indices for this pad aren't reliable, so the
+	 * menu is driven from the evdev reader (START -> SDLK_ESCAPE, see
+	 * platforms/erosq/erosq_input.cpp). Disable the SDL menu/pause buttons so a
+	 * stray trigger can't also trigger them. */
+	#define DEFAULT_BUTTON_ESCAPE (-1)
 #endif
 #ifndef DEFAULT_BUTTON_STATS
 	#define DEFAULT_BUTTON_STATS  (-1)
 #endif
 #ifndef DEFAULT_BUTTON_PAUSE
-	#define DEFAULT_BUTTON_PAUSE  (4)
+	#define DEFAULT_BUTTON_PAUSE  (-1)
 #endif
 #ifndef DEFAULT_BUTTON_YES
 	#define DEFAULT_BUTTON_YES    (-1)

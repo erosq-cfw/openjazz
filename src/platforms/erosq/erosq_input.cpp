@@ -29,6 +29,10 @@ static SDL_Keycode map_key(int evcode)
 	case 164: return SDLK_LCTRL;   /* KEY_PLAYPAUSE -> jump / confirm */
 	case 139: return SDLK_LALT;    /* KEY_MENU      -> fire           */
 	case 158: return SDLK_ESCAPE;  /* KEY_BACK      -> menu / cancel  */
+	/* BT gamepad: movement/fire/jump come from the SDL joystick path; only the
+	 * menu needs a deterministic evdev binding (SDL button indices unreliable). */
+	case 315: return SDLK_ESCAPE;  /* START  -> in-game menu */
+	case 314: return SDLK_p;       /* SELECT -> pause (DEFAULT_KEY_PAUSE == SDLK_p) */
 	default:  return SDLK_UNKNOWN;
 	}
 }
