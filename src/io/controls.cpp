@@ -513,6 +513,40 @@ int Controls::update (SDL_Event *event, LoopType type) {
 
 			break;
 
+#if !OJ_SDL3
+		case SDL_JOYDEVICEADDED:
+			/* A Bluetooth pad's device index changes across a reconnect, and SDL
+			 * only delivers a joystick's events while that joystick is open, so
+			 * re-open it on hotplug. init() opening index 0 once was enough only
+			 * until the first disconnect: after that, movement/fire/jump stayed
+			 * dead until OpenJazz was restarted (the erosq evdev shim covers the
+			 * menu keys, not the pad's gameplay controls).
+			 *
+			 * Only open what is not open already: SDL ref-counts opens, and it
+			 * also announces the devices that existed at SDL_Init() time, which
+			 * init() has just opened -- double-opening those would leave
+			 * ref_count at 1 after the matching REMOVED close below, leaking the
+			 * dead fd on every reconnect. */
+			{
+				/* here `which` is a device index, not an instance id */
+				SDL_JoystickID id =
+					SDL_JoystickGetDeviceInstanceID(event->jdevice.which);
+				if (!SDL_JoystickFromInstanceID(id))
+					SDL_JoystickOpen(event->jdevice.which);
+			}
+
+			break;
+
+		case SDL_JOYDEVICEREMOVED:
+			{
+				/* here `which` is an instance id, not a device index */
+				SDL_Joystick *j = SDL_JoystickFromInstanceID(event->jdevice.which);
+				if (j) SDL_JoystickClose(j);
+			}
+
+			break;
+#endif
+
 		case SDL_EVENT_JOYSTICK_BUTTON_DOWN:
 			if (type == SET_JOYSTICK_LOOP) return JOYSTICKB | event->jbutton.button;
 
