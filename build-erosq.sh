@@ -5,7 +5,7 @@
 # Launched bare by erosq-ui from the extras manifest.
 set -e
 
-BR=${BR:-buildroot-2026.05}
+BR=${BR:-buildroot-2026.08}
 TC="$BR/output/host/share/buildroot/toolchainfile.cmake"
 STRIP="$BR/output/host/bin/mipsel-buildroot-linux-musl-strip"
 DATA_DIR=${DATA_DIR:-/media/sd/ojspike/jazz}   # game data location on device
