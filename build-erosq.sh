@@ -5,7 +5,9 @@
 # Launched bare by erosq-ui from the extras manifest.
 set -e
 
-BR=${BR:-buildroot-2026.08}
+# Buildroot tree; defaults to a buildroot-2026.08 checkout next to this repo.
+EROSQ_ROOT=${EROSQ_ROOT:-$(cd "$(dirname "$0")/.." && pwd)}
+BR=${BR:-$EROSQ_ROOT/buildroot-2026.08}
 TC="$BR/output/host/share/buildroot/toolchainfile.cmake"
 STRIP="$BR/output/host/bin/mipsel-buildroot-linux-musl-strip"
 DATA_DIR=${DATA_DIR:-/media/sd/ojspike/jazz}   # game data location on device
